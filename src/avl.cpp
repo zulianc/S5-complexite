@@ -198,6 +198,37 @@ node* deleteNode(node *root, uint64_t data) {
     return root;
 }
 
+void show(node* root) {
+    if (root) {
+        cout << "left : ";
+        show(root->left);
+        cout << "data " << root->data << " ";
+        cout << "right : ";
+        show(root->right);
+    }
+}
+
+node* searchNode(node* root, uint64_t data) {
+    if (root) {
+
+        uint64_t rootData = root->data;
+
+        if (rootData == data) {
+            return root;
+
+        } else if (rootData > data) {
+            node* rootLeft = root->left;
+            return searchNode(rootLeft, data);
+
+        } else if (rootData < data) {
+            node* rootRight = root->right;
+            return searchNode(rootRight, data);
+        }
+    } else {
+        return NULL;
+    }
+}
+
     
 int main() {
     node* root = NULL;

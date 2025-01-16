@@ -12,9 +12,26 @@ typedef struct node {
 
 // Balance Factor BF
 int bf(node *n) {
-    int bf = 0;
-    // Calcul le BF au niveau du noeud n dans l'arbre
-    return bf;   
+    node* left = n->left;
+    node* right = n->right;
+
+    if (left == NULL && right == NULL) {
+        return 0;
+
+    } else if (left == NULL) {
+        int rightHeight = right->height;
+        return rightHeight - 1;
+
+    } else if (right == NULL) {
+        int leftHeight = left->height;
+        return leftHeight + 1;
+
+    } else {
+        int leftHeight  = left->height;
+        int rightHeight = right->height;
+
+        return leftHeight - rightHeight;
+    } 
 }
 
 // Rotation LL

@@ -101,9 +101,34 @@ node* lrrotation(node *n) {
 }
 
 // Insertion
-node* insert(node *root, uint64_t data) {
-    // insère la valeur data au bon endroit dans l'arbre enraciné en root ...
-    // TODO
+node* insert(node *&root, uint64_t data) {
+    if (!root) {
+        return new node{data, 1, nullptr, nullptr};
+    }
+
+    uint64_t rootData = root->data;
+    node* rootLeft  = root->left;
+    node* rootRight = root->right;
+    int bfRoot = bf(root);
+
+    if (data < rootData) {
+        rootLeft = insert(rootLeft, data);
+
+        if (bfRoot == 2) {
+            data < rootLeft->data ? root = llrotation(root) : root = rrrotation(root);
+        }
+    } else if (data > rootData) {
+        rootRight = insert(rootRight, data);
+
+        if (bfRoot == -2) {
+            data < rootRight->data ? root = rrrotation(root) : root = llrotation(root);
+        }
+    }
+
+    int rootLeftHeight  = calculateHeight(root->left);
+    int rootRightHeight = calculateHeight(root->right);
+
+    root->height = max(rootLeftHeight, rootRightHeight) + 1;
     return root;
 }
 

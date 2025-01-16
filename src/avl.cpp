@@ -10,28 +10,36 @@ typedef struct node {
     struct node *right;
 } node;
 
+int calculateHeight(node* n) {
+    if (n == NULL) return 0;
+    return n->height;
+}
+
 // Balance Factor BF
 int bf(node *n) {
+    int leftHeight, rightHeight;
     node* left = n->left;
     node* right = n->right;
 
-    if (left == NULL && right == NULL) {
+    if (n == NULL) {
         return 0;
 
-    } else if (left == NULL) {
-        int rightHeight = right->height;
-        return rightHeight - 1;
-
-    } else if (right == NULL) {
-        int leftHeight = left->height;
-        return leftHeight + 1;
+    } 
+    if (left == NULL) {
+        leftHeight = 0;
 
     } else {
-        int leftHeight  = left->height;
-        int rightHeight = right->height;
+        leftHeight = left->height;
+    }
+    
+    if (right == NULL) {
+        rightHeight = 0;
 
-        return leftHeight - rightHeight;
+    } else {
+        rightHeight = right->height;
     } 
+
+    return leftHeight - rightHeight;
 }
 
 // Rotation LL

@@ -79,5 +79,6 @@ int main(){
     node * root = NULL;
     // remplir l'arbre
     // faire des tests
+    std::cout << "HelloWorld" << std::endl;
     return 0;
 }

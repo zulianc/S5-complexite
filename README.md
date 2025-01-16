@@ -1,7 +1,7 @@
 
 Instructions :
 
-1 - Compléter le code ci-dessous pour avoir une implémentation
+1 - Compléter le code d'avl.cpp pour avoir une implémentation
 d'un arbre de type AVL. 
 
 2 - Faire des tests d'insertion, de suppression et de recherche (penser à faire une fonction d’affichage). 
@@ -16,3 +16,7 @@ les fichiers de benchmark et effectuer les opérations correspondantes.
 4 – Ajouter du code pour chronométrer les opérations. Réaliser des courbes comparatives 
 des temps d’exécutions des différentes opération en fonction de la taille de l’arbre. 
 Retrouvons-nous bien les complexité logarithmiques promises ?
+
+
+Pour build : `xmake`
+Pour run : `xmake run`

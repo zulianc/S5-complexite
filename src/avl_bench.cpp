@@ -11,7 +11,7 @@ int main() {
     mt19937_64 gen(rd());
     uniform_int_distribution<uint64_t> dis;
 
-    vector<int> exposants = {5,10,15,20,25};
+    vector<int> exposants = {5,10};
     for(auto e:exposants)
     {
         uint32_t count = 1 << e;

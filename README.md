@@ -18,4 +18,5 @@ Retrouvons-nous bien les complexité logarithmiques promises ?
   
 ## Instructions compilation
 Pour build : `xmake`  
-Pour run : `xmake run`  
+Pour générer les fichier .txt : `xmake run -w . avl_bench`  
+Pour run une fois les fichier .txt générés : `xmake run -w .`  

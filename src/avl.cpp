@@ -115,25 +115,21 @@ node* lrrotation(node *n) {
 // insert
 node* insert(node *&root, uint64_t data) {
     if (!root) {
-        return new node{data, 1, nullptr, nullptr};
+        root = new node{data, 1, nullptr, nullptr};
+        return root;
     }
 
-    uint64_t rootData = root->data;
-    node* rootLeft  = root->left;
-    node* rootRight = root->right;
-    int bfRoot = bf(root);
+    if (data < root->data) {
+        root->left = insert(root->left, data);
 
-    if (data < rootData) {
-        root->left = insert(rootLeft, data);
-
-        if (bfRoot == 2) {
-            data < rootLeft->data ? root = llrotation(root) : root = rrrotation(root);
+        if (bf(root) == 2) {
+            root = data < root->left->data ? llrotation(root) : rrrotation(root);
         }
-    } else if (data > rootData) {
-        root->right = insert(rootRight, data);
+    } else if (data > root->data) {
+        root->right = insert(root->right, data);
 
-        if (bfRoot == -2) {
-            data < rootRight->data ? root = rrrotation(root) : root = llrotation(root);
+        if (bf(root) == -2) {
+            root = data < root->right->data ? rrrotation(root) : llrotation(root);
         }
     }
 
@@ -254,11 +250,10 @@ int main() {
     insert(root, 14);
     show(root);
     cout << endl;
-    //system("g++ -o avl_bench avl_bench.cpp && ./avl_bench");
     vector<uint64_t> insertTime;
     vector<uint64_t> searchTime;
     vector<uint64_t> deleteTime;
-    for (int i = 1; i <= 17; i++)
+    for (int i = 5; i <= 5; i++)
     {
         cout << "Benchmarking for " << i << "th iteration" << endl;
         ifstream f1("Values_" + to_string(i) + ".txt");

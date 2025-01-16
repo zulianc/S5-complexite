@@ -14,7 +14,8 @@ les fichiers de benchmark et effectuer les opérations correspondantes.
   
 4 – Ajouter du code pour chronométrer les opérations. Réaliser des courbes comparatives
 des temps d’exécutions des différentes opération en fonction de la taille de l’arbre.
-Retrouvons-nous bien les complexité logarithmiques promises ?  
+Retrouvons-nous bien les complexité logarithmiques promises ? 
+=> Non, c'est en exponentiel 
   
 ## Instructions compilation
 Pour build : `xmake`  

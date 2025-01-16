@@ -14,7 +14,7 @@ std::uint64_t time() {
     .time_since_epoch()).count();
 }
 
-// Définition du type noeud de l'arbre ...
+// Définition du type node de l'arbre ...
 typedef struct node {
     uint64_t data;
     int height;
@@ -112,7 +112,7 @@ node* lrrotation(node *n) {
     return tp; 
 }
 
-// Insertion
+// insert
 node* insert(node *&root, uint64_t data) {
     if (!root) {
         return new node{data, 1, nullptr, nullptr};
@@ -243,9 +243,91 @@ void show(node* root) {
 
     
 int main() {
-    node* root = NULL;
-    // remplir l'arbre
-    // faire des tests
-    std::cout << "HelloWorld" << std::endl;
+    node *root = NULL;
+    insert(root, 1);
+    insert(root, 19);
+    insert(root, 2);
+    insert(root, 5);
+    insert(root, 3);
+    insert(root, 8);
+    insert(root, 24);
+    insert(root, 14);
+    show(root);
+    cout << endl;
+    system("g++ -o avl_bench avl_bench.cpp && ./avl_bench");
+    vector<uint64_t> insertTime;
+    vector<uint64_t> searchTime;
+    vector<uint64_t> deleteTime;
+    for (int i = 1; i <= 17; i++)
+    {
+        cout << "Benchmarking for " << i << "th iteration" << endl;
+        ifstream f1("Values_" + to_string(i) + ".txt");
+        ifstream f2("Search_" + to_string(i) + ".txt");
+        ifstream f3("Delete_" + to_string(i) + ".txt");
+
+        std::uint64_t start = time();
+        node *root = NULL;
+        while (!f1.eof())
+        {
+            uint64_t v;
+            f1 >> v;
+            root = insert(root, v);
+        }
+        cout << endl;
+        start;
+        insertTime.push_back(time() - start);
+        start = time();
+        while (!f2.eof())
+        {
+            uint64_t v;
+            f2 >> v;
+            node *n = searchNode(root, v);
+        }
+        start;
+        searchTime.push_back(time() - start);
+        start = time();
+        while (!f3.eof())
+        {
+            uint64_t v;
+            f3 >> v;
+            root = deleteNode(root, v);
+        }
+        start;
+        deleteTime.push_back(time() - start);
+        f1.close();
+        f2.close();
+        f3.close();
+    }
+
+    cout << "insert times: ";
+    for (auto i : insertTime)
+    {
+        cout << i << " ";
+    }
+    cout << endl;
+
+    cout << "Search times: ";
+    for (auto i : searchTime)
+    {
+        cout << i << " ";
+    }
+    cout << endl;
+
+    cout << "Deletion times: ";
+    for (auto i : deleteTime)
+    {
+        cout << i << " ";
+    }
+    cout << endl;
+
+    ofstream f("stats.csv");
+    f << "insert,Search,Deletion\n";
+    for (int i = 0; i < insertTime.size(); i++)
+    {
+        f << insertTime[i] << "," << searchTime[i] << "," << deleteTime[i] << "\n";
+    }
+    f.close();
+
+    system("python3 plot.py");
     return 0;
 }

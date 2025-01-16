@@ -1,4 +1,4 @@
-Instructions :  
+## Consignes TP
    
 1 - Compléter le code d'avl.cpp pour avoir une implémentation
 d'un arbre de type AVL.  
@@ -16,6 +16,6 @@ les fichiers de benchmark et effectuer les opérations correspondantes.
 des temps d’exécutions des différentes opération en fonction de la taille de l’arbre.
 Retrouvons-nous bien les complexité logarithmiques promises ?  
   
-  
+## Instructions compilation
 Pour build : `xmake`  
 Pour run : `xmake run`  

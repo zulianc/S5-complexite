@@ -44,43 +44,59 @@ int bf(node *n) {
 
 // Rotation LL
 node* llrotation(node *n) {
-    node *p;
     node *tp;
-    p = n;
-    tp = p->left;
+    tp = n->left;
 
-    p->left = tp->right;
-    tp->right = p;
+    n->left = tp->right;
+    tp->right = n;
+
+    int nLeftHeight  = calculateHeight(n->left);
+    int nRightHeight = calculateHeight(n->right);
+    int tpLeftHeight = calculateHeight(tp->left);
+
+    n->height  = max(nLeftHeight, nRightHeight) + 1;
+    tp->height = max(tpLeftHeight, n->height) + 1;
 
     return tp; 
 }
 
 // Rotation RR
 node* rrrotation(node *n) {
-    node *p;
     node *tp;
-    p = n;
-    tp = p->right;
+    tp = n->right;
 
-    p->right = tp->left;
-    tp->left = p;
+    n->right = tp->left;
+    tp->left = n;
+
+    int nLeftHeight  = calculateHeight(n->left);
+    int nRightHeight = calculateHeight(n->right);
+    int tpLeftHeight = calculateHeight(tp->left);
+
+    n->height  = max(nLeftHeight, nRightHeight) + 1;
+    tp->height = max(tpLeftHeight, n->height) + 1;
 
     return tp; 
 }
 
 // Rotation RL
 node * rlrotation(node *n) {
-    node *tp;
-    // effectue la rotation RL
-    // TODO
+    node* tp;
+    node* right = n->right;
+
+    n->right = llrotation(right);
+
+    tp = rrrotation(n);
     return tp; 
 }
 
 // Rotation LR
 node* lrrotation(node *n) {
-    node *tp;
-    // effectue la rotation LR
-    // TODO
+    node* tp;
+    node* left = n->left;
+
+    n->left = rrrotation(left);
+
+    tp = llrotation(n);
     return tp; 
 }
 

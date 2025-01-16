@@ -29,87 +29,44 @@ int calculateHeight(node* n) {
 
 // Balance Factor BF
 int bf(node *n) {
-    int leftHeight, rightHeight;
-    node* left = n->left;
-    node* right = n->right;
-
-    if (n == NULL) {
-        return 0;
-
-    } 
-    if (left == NULL) {
-        leftHeight = 0;
-
-    } else {
-        leftHeight = left->height;
-    }
-    
-    if (right == NULL) {
-        rightHeight = 0;
-
-    } else {
-        rightHeight = right->height;
-    } 
-
-    return leftHeight - rightHeight;
+    if (n == NULL) return 0;
+    return calculateHeight(n->left) - calculateHeight(n->right);
 }
 
 // Rotation LL
 node* llrotation(node *n) {
-    node *tp;
-    tp = n->left;
-
+    node *tp = n->left;
     n->left = tp->right;
     tp->right = n;
 
-    int nLeftHeight  = calculateHeight(n->left);
-    int nRightHeight = calculateHeight(n->right);
-    int tpLeftHeight = calculateHeight(tp->left);
-
-    n->height  = max(nLeftHeight, nRightHeight) + 1;
-    tp->height = max(tpLeftHeight, n->height) + 1;
+    n->height = max(calculateHeight(n->left), calculateHeight(n->right)) + 1;
+    tp->height = max(calculateHeight(tp->left), n->height) + 1;
 
     return tp; 
 }
 
 // Rotation RR
 node* rrrotation(node *n) {
-    node *tp;
-    tp = n->right;
-
+    node *tp = n->right;
     n->right = tp->left;
     tp->left = n;
 
-    int nLeftHeight  = calculateHeight(n->left);
-    int nRightHeight = calculateHeight(n->right);
-    int tpLeftHeight = calculateHeight(tp->left);
-
-    n->height  = max(nLeftHeight, nRightHeight) + 1;
-    tp->height = max(tpLeftHeight, n->height) + 1;
+    n->height = max(calculateHeight(n->left), calculateHeight(n->right)) + 1;
+    tp->height = max(calculateHeight(tp->right), n->height) + 1;
 
     return tp; 
 }
 
 // Rotation RL
 node * rlrotation(node *n) {
-    node* tp;
-    node* right = n->right;
-
-    n->right = llrotation(right);
-
-    tp = rrrotation(n);
-    return tp; 
+    n->right = llrotation(n->right);
+    return rrrotation(n);
 }
 
 // Rotation LR
 node* lrrotation(node *n) {
-    node* tp;
-    node* left = n->left;
-
-    n->left = rrrotation(left);
-
-    tp = llrotation(n);
-    return tp; 
+    n->left = rrrotation(n->left);
+    return llrotation(n);
 }
 
 // insert
@@ -123,82 +80,57 @@ node* insert(node *&root, uint64_t data) {
         root->left = insert(root->left, data);
 
         if (bf(root) == 2) {
-            root = data < root->left->data ? llrotation(root) : rrrotation(root);
+            root = (data < root->left->data) ? llrotation(root) : lrrotation(root);
         }
     } else if (data > root->data) {
         root->right = insert(root->right, data);
 
         if (bf(root) == -2) {
-            root = data < root->right->data ? rrrotation(root) : llrotation(root);
+            root = (data > root->right->data) ? rrrotation(root) : rlrotation(root);
         }
     }
 
-    int rootLeftHeight  = calculateHeight(root->left);
-    int rootRightHeight = calculateHeight(root->right);
-
-    root->height = max(rootLeftHeight, rootRightHeight) + 1;
+    root->height = max(calculateHeight(root->left), calculateHeight(root->right)) + 1;
     return root;
 }
 
-// Suppresion
+// Suppression
 node* deleteNode(node *root, uint64_t data) {
-    if (!root) {
-        return nullptr;
-    }
+    if (!root) return nullptr;
 
-    uint64_t rootData = root->data;
-    node* rootLeft  = root->left;
-    node* rootRight = root->right;
-    int bfRoot = bf(root);
-
-    if (data < rootData) {
-        root->left = deleteNode(rootLeft, data);
-
-    } else if (data > rootData) {
-        root->right = deleteNode(rootRight, data);
-
+    if (data < root->data) {
+        root->left = deleteNode(root->left, data);
+    } else if (data > root->data) {
+        root->right = deleteNode(root->right, data);
     } else {
-        if (!rootLeft) {
-            node* tmp = rootRight;
+        if (!root->left) {
+            node* tmp = root->right;
             delete root;
             return tmp;
-        } else if (!rootRight) {
-            node* tmp = rootLeft;
+        } else if (!root->right) {
+            node* tmp = root->left;
             delete root;
             return tmp;
         }
 
-        node* tmp = rootRight;
+        node* tmp = root->right;
+        while (tmp->left) tmp = tmp->left;
 
-        while (tmp->left) {
-            tmp = tmp->left;
-        }
-
-        uint64_t tmpData = tmp->data;
-        root->data = tmpData;
-        root->right = deleteNode(rootRight, tmpData);
+        root->data = tmp->data;
+        root->right = deleteNode(root->right, tmp->data);
     }
 
-    int rootLeftHeight  = calculateHeight(root->left);
-    int rootRightHeight = calculateHeight(root->right);
+    root->height = max(calculateHeight(root->left), calculateHeight(root->right)) + 1;
 
-    root->height = max(rootLeftHeight, rootRightHeight) + 1;
+    int balance = bf(root);
 
-    int rootBalance = bf(root);
-    int rootLeftBalance  = bf(root->left);
-    int rootRightBalance = bf(root->right);
-
-    if (rootBalance > 1 && rootLeftBalance >= 0) {
-        return llrotation(root);
-
-    } else if (rootBalance > 1 && rootLeftBalance < 0) {
+    if (balance > 1 && bf(root->left) >= 0) return llrotation(root);
+    if (balance > 1 && bf(root->left) < 0) {
         root->left = rrrotation(root->left);
         return llrotation(root);
-
-    } else if (rootBalance < -1 && rootLeftBalance <= 0) {
-        return rrrotation(root);
-
-    } else if (rootBalance < -1 && rootLeftBalance > 0) {
+    }
+    if (balance < -1 && bf(root->right) <= 0) return rrrotation(root);
+    if (balance < -1 && bf(root->right) > 0) {
         root->right = llrotation(root->right);
         return rrrotation(root);
     }
@@ -207,122 +139,72 @@ node* deleteNode(node *root, uint64_t data) {
 }
 
 node* searchNode(node* root, uint64_t data) {
-    if (root) {
-
-        uint64_t rootData = root->data;
-
-        if (rootData == data) {
-            return root;
-
-        } else if (rootData > data) {
-            node* rootLeft = root->left;
-            return searchNode(rootLeft, data);
-
-        } else if (rootData < data) {
-            node* rootRight = root->right;
-            return searchNode(rootRight, data);
-        }
-    } else {
-        return NULL;
-    }
+    if (!root) return NULL;
+    if (data == root->data) return root;
+    return (data < root->data) ? searchNode(root->left, data) : searchNode(root->right, data);
 }
 
 void show(node* root) {
     if (root) {
-        cout << "left : ";
         show(root->left);
-        cout << "data " << root->data << " ";
-        cout << "right : ";
+        cout << root->data << " ";
         show(root->right);
     }
 }
 
-    
 int main() {
-    node *root = NULL;
-    insert(root, 1);
-    insert(root, 19);
-    insert(root, 2);
-    insert(root, 5);
-    insert(root, 3);
-    insert(root, 8);
-    insert(root, 24);
-    insert(root, 14);
-    show(root);
-    cout << endl;
-    vector<uint64_t> insertTime;
-    vector<uint64_t> searchTime;
-    vector<uint64_t> deleteTime;
-    for (int i = 5; i <= 5; i++)
-    {
-        cout << "Benchmarking for " << i << "th iteration" << endl;
+
+    vector<uint64_t> insertTime, searchTime, deleteTime;
+    for (int i = 5; i <= 15; i += 5) {
+        cout << "Benchmarking " << i << "th file" << endl;
+
         ifstream f1("Values_" + to_string(i) + ".txt");
         ifstream f2("Search_" + to_string(i) + ".txt");
         ifstream f3("Delete_" + to_string(i) + ".txt");
 
-        std::uint64_t start = time();
-        node *root = NULL;
-        while (!f1.eof())
-        {
-            uint64_t v;
-            f1 >> v;
-            root = insert(root, v);
+        if (!f1.is_open() || !f2.is_open() || !f3.is_open()) {
+            cerr << "Erreur : Impossible d'ouvrir les fichiers pour l'itération " << i << endl;
+            continue;
         }
-        cout << endl;
-        start;
+
+        uint64_t start = time();
+        node *benchmarkRoot = NULL;
+        uint64_t v;
+
+        while (f1 >> v) {
+            benchmarkRoot = insert(benchmarkRoot, v);
+        }
         insertTime.push_back(time() - start);
+
         start = time();
-        while (!f2.eof())
-        {
-            uint64_t v;
-            f2 >> v;
-            node *n = searchNode(root, v);
+        while (f2 >> v) {
+            searchNode(benchmarkRoot, v);
         }
-        start;
         searchTime.push_back(time() - start);
+
         start = time();
-        while (!f3.eof())
-        {
-            uint64_t v;
-            f3 >> v;
-            root = deleteNode(root, v);
+        while (f3 >> v) {
+            benchmarkRoot = deleteNode(benchmarkRoot, v);
         }
-        start;
         deleteTime.push_back(time() - start);
+
         f1.close();
         f2.close();
         f3.close();
     }
 
-    cout << "insert times: ";
-    for (auto i : insertTime)
-    {
-        cout << i << " ";
-    }
+    // Affichage des temps
+    cout << "Temps d'insertion : ";
+    for (auto t : insertTime) cout << t << " ";
     cout << endl;
 
-    cout << "Search times: ";
-    for (auto i : searchTime)
-    {
-        cout << i << " ";
-    }
+    cout << "Temps de recherche : ";
+    for (auto t : searchTime) cout << t << " ";
     cout << endl;
 
-    cout << "Deletion times: ";
-    for (auto i : deleteTime)
-    {
-        cout << i << " ";
-    }
+    cout << "Temps de suppression : ";
+    for (auto t : deleteTime) cout << t << " ";
     cout << endl;
 
-    ofstream f("stats.csv");
-    f << "insert,Search,Deletion\n";
-    for (int i = 0; i < insertTime.size(); i++)
-    {
-        f << insertTime[i] << "," << searchTime[i] << "," << deleteTime[i] << "\n";
-    }
-    f.close();
-
-    system("./avl_bench.R");
     return 0;
 }

@@ -52,7 +52,7 @@ node * rlrotation(node *n) {
 }
 
 // Rotation LR
-node* lrrotation(node *n){
+node* lrrotation(node *n) {
     node *tp;
     // effectue la rotation LR
     // TODO
@@ -60,22 +60,22 @@ node* lrrotation(node *n){
 }
 
 // Insertion
-node* insert(node *root, uint64_t data){
+node* insert(node *root, uint64_t data) {
     // insère la valeur data au bon endroit dans l'arbre enraciné en root ...
     // TODO
     return root;
 }
 
 // Suppresion
-node* deleteNode(node *root, uint64_t data){
+node* deleteNode(node *root, uint64_t data) {
     // cherche la valeur data dans l'arbre enraciné en root puis la supprime ...    
     // TODO
     return root;
 }
 
     
-int main(){
-    node * root = NULL;
+int main() {
+    node* root = NULL;
     // remplir l'arbre
     // faire des tests
     return 0;

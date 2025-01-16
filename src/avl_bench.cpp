@@ -6,7 +6,7 @@
 
 using namespace std;
 
-int bench_main() {
+int main() {
     random_device rd;
     mt19937_64 gen(rd());
     uniform_int_distribution<uint64_t> dis;

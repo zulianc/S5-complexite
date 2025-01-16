@@ -2,7 +2,11 @@ add_rules("mode.debug", "mode.release")
 
 target("S5-complexite")
     set_kind("binary")
-    add_files("src/*.cpp")
+    add_files("src/avl.cpp")
+
+target("avl_bench")
+    set_kind("binary")
+    add_files("src/avl_bench.cpp")
 
 --
 -- If you want to known more usage about xmake, please see https://xmake.io

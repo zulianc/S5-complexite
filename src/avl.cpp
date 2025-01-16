@@ -254,7 +254,7 @@ int main() {
     insert(root, 14);
     show(root);
     cout << endl;
-    system("g++ -o avl_bench avl_bench.cpp && ./avl_bench");
+    //system("g++ -o avl_bench avl_bench.cpp && ./avl_bench");
     vector<uint64_t> insertTime;
     vector<uint64_t> searchTime;
     vector<uint64_t> deleteTime;
@@ -328,6 +328,6 @@ int main() {
     }
     f.close();
 
-    system("python3 plot.py");
+    system("./avl_bench.R");
     return 0;
 }

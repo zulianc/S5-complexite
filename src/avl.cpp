@@ -112,13 +112,13 @@ node* insert(node *&root, uint64_t data) {
     int bfRoot = bf(root);
 
     if (data < rootData) {
-        rootLeft = insert(rootLeft, data);
+        root->left = insert(rootLeft, data);
 
         if (bfRoot == 2) {
             data < rootLeft->data ? root = llrotation(root) : root = rrrotation(root);
         }
     } else if (data > rootData) {
-        rootRight = insert(rootRight, data);
+        root->right = insert(rootRight, data);
 
         if (bfRoot == -2) {
             data < rootRight->data ? root = rrrotation(root) : root = llrotation(root);
@@ -134,8 +134,67 @@ node* insert(node *&root, uint64_t data) {
 
 // Suppresion
 node* deleteNode(node *root, uint64_t data) {
-    // cherche la valeur data dans l'arbre enraciné en root puis la supprime ...    
-    // TODO
+    if (!root) {
+        return nullptr;
+    }
+
+    uint64_t rootData = root->data;
+    node* rootLeft  = root->left;
+    node* rootRight = root->right;
+    int bfRoot = bf(root);
+
+    if (data < rootData) {
+        root->left = deleteNode(rootLeft, data);
+
+    } else if (data > rootData) {
+        root->right = deleteNode(rootRight, data);
+
+    } else {
+        if (!rootLeft) {
+            node* tmp = rootRight;
+            delete root;
+            return tmp;
+        } else if (!rootRight) {
+            node* tmp = rootLeft;
+            delete root;
+            return tmp;
+        }
+
+        node* tmp = rootRight;
+
+        while (tmp->left) {
+            tmp = tmp->left;
+        }
+
+        uint64_t tmpData = tmp->data;
+        root->data = tmpData;
+        root->right = deleteNode(rootRight, tmpData);
+    }
+
+    int rootLeftHeight  = calculateHeight(root->left);
+    int rootRightHeight = calculateHeight(root->right);
+
+    root->height = max(rootLeftHeight, rootRightHeight) + 1;
+
+    int rootBalance = bf(root);
+    int rootLeftBalance  = bf(root->left);
+    int rootRightBalance = bf(root->right);
+
+    if (rootBalance > 1 && rootLeftBalance >= 0) {
+        return llrotation(root);
+
+    } else if (rootBalance > 1 && rootLeftBalance < 0) {
+        root->left = rrrotation(root->left);
+        return llrotation(root);
+
+    } else if (rootBalance < -1 && rootLeftBalance <= 0) {
+        return rrrotation(root);
+
+    } else if (rootBalance < -1 && rootLeftBalance > 0) {
+        root->right = llrotation(root->right);
+        return rrrotation(root);
+    }
+
     return root;
 }
 

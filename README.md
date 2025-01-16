@@ -18,6 +18,8 @@ Retrouvons-nous bien les complexité logarithmiques promises ?
 => Non, c'est en exponentiel 
   
 ## Instructions compilation
+Pour installer xmake : https://xmake.io/#/getting_started
+
 Pour build : `xmake`  
 Pour générer les fichier .txt : `xmake run -w . avl_bench`  
 Pour run une fois les fichier .txt générés : `xmake run -w .`  

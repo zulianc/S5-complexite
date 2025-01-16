@@ -1,6 +1,18 @@
-#include <iostream>
+#include <chrono>
+#include <cstddef>
 #include <cstdint>
+#include <cstdlib>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <vector>
+
 using namespace std;
+
+std::uint64_t time() {
+    return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now()
+    .time_since_epoch()).count();
+}
 
 // Définition du type noeud de l'arbre ...
 typedef struct node {
@@ -198,16 +210,6 @@ node* deleteNode(node *root, uint64_t data) {
     return root;
 }
 
-void show(node* root) {
-    if (root) {
-        cout << "left : ";
-        show(root->left);
-        cout << "data " << root->data << " ";
-        cout << "right : ";
-        show(root->right);
-    }
-}
-
 node* searchNode(node* root, uint64_t data) {
     if (root) {
 
@@ -226,6 +228,16 @@ node* searchNode(node* root, uint64_t data) {
         }
     } else {
         return NULL;
+    }
+}
+
+void show(node* root) {
+    if (root) {
+        cout << "left : ";
+        show(root->left);
+        cout << "data " << root->data << " ";
+        cout << "right : ";
+        show(root->right);
     }
 }
 
